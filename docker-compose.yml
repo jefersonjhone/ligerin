@@ -1,0 +1,45 @@
+# Cada parte do Ligerin em um container:
+#   server     — protocolo LPC sobre TCP (porta 8080)
+#   motorista  — client Tauri headless com Xvfb + VNC (porta 5900)
+#   passageiro — client Tauri headless com Xvfb + VNC (porta 5901)
+#
+# Acesso às UIs: cliente VNC em localhost:5900 (motorista) e localhost:5901 (passageiro).
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "8080:8080"
+
+  motorista:
+    build:
+      context: .
+      dockerfile: client-motorista/Dockerfile
+      args:
+        CLIENT: client-motorista
+        BIN: ligerin-client-motorista
+    environment:
+      LPC_SERVER_HOST: server
+      LPC_SERVER_PORT: "8080"
+    ports:
+      - "5900:5900"
+    depends_on:
+      - server
+
+  passageiro:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        CLIENT: client
+        BIN: ligerin-client
+    environment:
+      LPC_SERVER_HOST: server
+      LPC_SERVER_PORT: "8080"
+    ports:
+      # x11vnc escuta na 5900 interna do container
+      - "5901:5900"
+    depends_on:
+      - server
