@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import "@fontsource-variable/archivo/wdth.css";
+
+/* ─── mundo: sinalização rodoviária BR ────────────────────────────────────────
+   dia = dirigir de dia · noite = dirigir à noite (prefers-color-scheme)
+   painéis-placa, letreiros condensados, marcos de km, losangos de contagem. */
+
+:root {
+  --bg: #eef1ec;
+  --surface: #fbfcf9;
+  --surface2: #f3f6f1;
+  --edge: #dbe3da;
+  --edge2: #c2cdc2;
+  --ink: #18201a;
+  --muted: #5a6b5f;
+  --accent: #087a44; /* verde-placa: campo sólido */
+  --accent2: #065f35; /* hover do campo sólido */
+  --accent-ink: #0a6b3d; /* verde tinta sobre neutro */
+  --accent-soft: #e4f1e9; /* fundo tintado */
+  --danger: #b8322a;
+  --danger-soft: #fbe9e7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b100d;
+    --surface: #141b16;
+    --surface2: #19221b;
+    --edge: #27322a;
+    --edge2: #3a483d;
+    --ink: #e8eee9;
+    --muted: #96a69b;
+    --accent: #0d7f47;
+    --accent2: #129a58;
+    --accent-ink: #3ccb82;
+    --accent-soft: #12281c;
+    --danger: #e5594c;
+    --danger-soft: #2a1614;
+  }
+}
+
+/* tokens do Tailwind */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface2);
+  --color-edge: var(--edge);
+  --color-edge2: var(--edge2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent2);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-bg text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #fff;
+  }
+}
+
+/* ─── componentes: placas, letreiros e sinais ──────────────────────────────── */
+
+@layer components {
+  /* letreiro: título de placa — condensado, caixa alta, peso alto */
+  .letreiro {
+    font-stretch: 78%;
+    text-transform: uppercase;
+    letter-spacing: 0.045em;
+    @apply font-extrabold leading-tight;
+  }
+
+  /* etiqueta de placa (rótulo de campo/seção) */
+  .campo-label {
+    @apply text-[11px] font-bold uppercase tracking-[0.14em] text-muted;
+  }
+
+  /* painel-placa: superfície neutra com filete */
+  .placa {
+    @apply rounded-xl border border-edge bg-surface transition-colors duration-200;
+  }
+
+  /* campo de formulário */
+  .input {
+    @apply w-full rounded-lg border border-edge2 bg-surface px-3 py-2 text-[15px] text-ink outline-none transition placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:opacity-55;
+  }
+
+  /* botão-placa */
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-edge2 bg-surface px-4 py-2 text-[15px] font-bold text-ink transition duration-150 active:translate-y-px disabled:cursor-default disabled:opacity-55;
+  }
+
+  .btn-primary {
+    @apply border-accent bg-accent text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-accent2 hover:shadow-none;
+  }
+
+  .btn-outline {
+    @apply border-edge2 bg-transparent hover:border-accent hover:text-accent-ink;
+  }
+
+  .btn-link {
+    @apply border-0 bg-transparent px-2 py-1 text-sm font-bold text-accent-ink hover:text-accent2;
+  }
+
+  .btn-danger {
+    @apply border-danger/30 bg-transparent px-3 py-1.5 text-sm font-bold text-danger transition duration-150 hover:bg-danger/10 active:translate-y-px disabled:cursor-default disabled:opacity-55;
+  }
+
+  /* chip de status */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-md bg-accent-soft px-1.5 py-0.5 text-[11px] font-bold text-accent-ink;
+  }
+
+  .badge-cheio {
+    @apply bg-danger-soft text-danger;
+  }
+
+  /* losango: contagem numérica (como o losango de rodovia) */
+  .losango {
+    @apply grid h-[22px] w-[22px] shrink-0 rotate-45 place-items-center rounded-[3px] border-2 border-accent bg-surface;
+  }
+
+  .losango > span {
+    @apply -rotate-45 text-[10px] font-extrabold leading-none tabular-nums text-accent-ink;
+  }
+
+  .losango-cheio {
+    @apply border-danger;
+  }
+
+  .losango-cheio > span {
+    @apply text-danger;
+  }
+
+  /* marco: parada numerada na linha de rota */
+  .marco {
+    @apply grid h-6 w-6 shrink-0 place-items-center rounded-full border-2 border-accent bg-surface text-[11px] font-extrabold tabular-nums text-accent-ink;
+  }
+
+  .marco-ponta {
+    @apply border-edge2 text-muted;
+  }
+
+  /* trilho: conexão vertical entre marcos */
+  .trilho {
+    @apply border-l-2 border-dashed border-edge2;
+  }
+
+  /* sinais de estado */
+  .erro,
+  .error {
+    @apply flex items-start gap-2 rounded-lg border border-danger/35 bg-danger-soft px-3 py-2 text-sm font-semibold text-danger;
+  }
+
+  .sucesso {
+    @apply flex items-start gap-2 rounded-lg border border-accent/35 bg-accent-soft px-3 py-2 text-sm font-semibold text-accent-ink;
+  }
+
+  /* passagem: recibo perfurado */
+  .passagem {
+    @apply rounded-xl border border-edge bg-surface transition-colors duration-200;
+  }
+}
+
+/* ─── mapa offline (Leaflet sem tiles) ─────────────────────────────────────── */
+
+/* painel do mapa: moldura da placa com fundo do mundo */
+.mapa-rota {
+  @apply mb-5 w-full overflow-hidden rounded-xl border border-edge bg-bg;
+}
+
+.mapa-rota .leaflet-container {
+  background: var(--bg);
+  font-family: inherit;
+}
+
+/* controles de zoom e tooltips integrados ao tema (claro/escuro) */
+.mapa-rota .leaflet-control-zoom {
+  border: 1px solid var(--edge2);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.mapa-rota .leaflet-control-zoom a {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--edge);
+}
+
+.mapa-rota .leaflet-control-zoom a:hover {
+  background: var(--surface2);
+  color: var(--accent-ink);
+}
+
+.mapa-rota .leaflet-tooltip {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--edge2);
+  border-radius: 6px;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+}
+
+.mapa-rota .leaflet-tooltip-top:before {
+  border-top-color: var(--edge2);
+}
+
+.mapa-rota .leaflet-container:focus {
+  outline: none;
+}
