@@ -1,0 +1,28 @@
+# Rust
+target/
+**/target/
+
+# Node / bundlers
+**/node_modules/
+**/dist/
+
+# Python (dados/processamento)
+data/.ipynb_checkpoints/
+**/__pycache__/
+
+**/src-tauri/gen/
+**/src-tauri/target/
+
+.DS_Store
+*.log
+
+.backup/
+**/.tmp/
+
+data/data/*.csv
+!data/data/vw_sedes_municipais.csv
+
+# Editor
+.vscode/
+
+.data

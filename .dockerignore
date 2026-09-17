@@ -1,0 +1,11 @@
+**/target
+**/node_modules
+.git
+**/src-tauri/gen
+# Pesos que nenhum build usa (contexto enxuto)
+.backup
+**/.tmp
+data/.venv
+**/.ipynb_checkpoints
+.data
+docs
